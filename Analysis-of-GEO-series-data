@@ -1,0 +1,109 @@
+# Import required libraries for data processing, visualization, and dimensionality reduction
+import GEOparse
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+import umap
+
+# Install GEOparse if not already installed
+# Run this command in your terminal or command line, not in the script:
+# pip install GEOparse
+
+# Load GEO series data using GEOparse
+# Replace "GSE10072" with your specific GEO series identifier
+# The 'destdir' parameter specifies the directory where the GEO file will be saved ("./" is shorthand for current directory)
+gse = GEOparse.get_GEO(geo="GSE10072", destdir="./")
+
+# Print summary of the GEO dataset to understand its structure and contents
+print(gse)
+
+# Access the expression data from the GEO dataset
+# 'gsms' is a dictionary where keys are GSM identifiers (individual samples)
+# and values are GSM objects containing sample details and expression data
+gset = gse.gsms
+
+# Convert the expression data into a pandas DataFrame
+# 'pivot_samples' function arranges the data into a table where rows are genes and columns are samples
+# 'VALUE' specifies the column from GSM data to be used as the expression values
+expression_data = gse.pivot_samples('VALUE')
+
+# Load metadata related to the samples
+metadata = gse.phenotype_data
+
+# Print the first few rows of the expression data and metadata to inspect the data
+print(expression_data.head())
+print(metadata.head())
+
+# Convert expression data DataFrame to a NumPy array for numerical operations
+ex_array = np.array(expression_data)
+
+# Compute quantiles of the expression data array
+# This helps in determining the distribution and spread of the expression values
+qx = np.quantile(ex_array[~np.isnan(ex_array)], [0, 0.25, 0.5, 0.75, 0.99, 1.0])
+
+# Determine if log2 transformation is needed based on quantile values
+# Condition 1: Check if the 99th percentile value is greater than 100
+# Condition 2: Check if the range of values is larger than 50 and the 1st quartile is positive
+# Log transformation helps in normalizing the data if the distribution is skewed
+LogC = (qx[4] > 100) or (qx[5] - qx[0] > 50 and qx[1] > 0)
+if LogC:
+    # Replace non-positive values with NaN (as log2 transformation is not defined for zero or negative values)
+    ex_array[ex_array <= 0] = np.nan
+    # Apply log2 transformation to the expression data
+    ex_array = np.log2(ex_array)
+
+# Generate a box-and-whisker plot to visualize the distribution of expression data
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=ex_array)
+plt.title("GSE10072 Expression Data Boxplot")
+plt.xlabel('Samples')  # X-axis label
+plt.ylabel('Expression Levels')  # Y-axis label
+plt.xticks(rotation=90)  # Rotate x-axis labels for better readability
+plt.tight_layout()  # Adjust layout to fit into the figure area
+plt.savefig("boxplot.png")  # Save the plot as a PNG file
+plt.show()  # Display the plot
+
+# Transpose the DataFrame to have samples as rows and genes as columns for density plot
+expression_data_t = expression_data.T
+
+# Generate a density plot to visualize the distribution of expression values
+plt.figure(figsize=(10, 6))
+sns.kdeplot(data=ex_array.flatten(), shade=True)
+plt.title("GSE10072 Expression Value Distribution")
+plt.xlabel("Expression Value")
+plt.ylabel("Density")
+plt.tight_layout()  # Adjust layout to fit into the figure area
+plt.savefig("density_plot.png")  # Save the plot as a PNG file
+
+# Calculate the mean and variance of expression values
+mean_expr = np.nanmean(ex_array, axis=0)
+var_expr = np.nanvar(ex_array, axis=0)
+
+# Generate a scatter plot to visualize the mean-variance relationship
+plt.figure(figsize=(10, 6))
+plt.scatter(mean_expr, var_expr, alpha=0.5)
+plt.xscale('log')  # Use log scale for x-axis
+plt.yscale('log')  # Use log scale for y-axis
+plt.title("Mean-Variance Trend")
+plt.xlabel("Mean Expression")
+plt.ylabel("Variance")
+plt.tight_layout()  # Adjust layout to fit into the figure area
+plt.savefig("mean_variance_trend.png")  # Save the plot as a PNG file
+
+# Remove duplicate rows from expression data array
+ex_array = np.unique(ex_array, axis=0)
+
+# Perform UMAP (Uniform Manifold Approximation and Projection) for dimensionality reduction
+# 'n_neighbors' specifies the number of neighboring points to consider
+reducer = umap.UMAP(n_neighbors=15, random_state=123)
+embedding = reducer.fit_transform(ex_array.T)
+
+# Generate a scatter plot of the UMAP results
+plt.figure(figsize=(10, 6))
+plt.scatter(embedding[:, 0], embedding[:, 1], s=10, c='blue', alpha=0.5)
+plt.title("UMAP Plot (n_neighbors=15)")
+plt.xlabel("UMAP 1")
+plt.ylabel("UMAP 2")
+plt.tight_layout()  # Adjust layout to fit into the figure area
+plt.savefig("umap_plot.png")  # Save the plot as a PNG file
