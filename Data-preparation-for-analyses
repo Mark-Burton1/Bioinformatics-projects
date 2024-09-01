@@ -1,0 +1,56 @@
+#setting working directory
+
+setwd("C:/Users/Mark/Documents/Queens Documents 2020/Research project 2020/Research project 2020 data analysis")
+
+#using the options command to allow more rows to be printed
+
+options(max.print=1000000)
+
+#reading in data. The 'ZC3H7A KO vs. flip in.csv' file contains columns with gene expression data and translation efficiency data,(obtained from RNA-sequencing and ribosome profiling
+##of HEK293 cell lines with zc3h7a gene Knockout). These steps are repeated with zc3h7a Overexpression, zc3h7b Knockout, and zc3h7b Overexpression to explore the 
+###transcriptional and translational changes in these cell lines. 
+
+myData<-read.csv('ZC3H7A KO vs. flip in.csv', header = TRUE, sep=",")
+
+#data inspection 
+
+nrow(myData)
+ncol(myData)
+head(myData)
+tail(myData)
+class(myData)
+
+#The important columns to work with here are the following:
+
+## 1.) log2fold change in gene expression
+## 2.) final log2fold change in translation efficiency
+## 3.) FDR adjusted p-values
+
+#creating dataframe with statistically significant gene measurements for later analysis
+
+FDR_ordered_data<-myData[order(myData$pvalue.adjust),]
+FDR_0.05<-subset(myData, pvalue.adjust<=0.05)
+
+#extracting statistically significant gene names for later analysis
+
+#loading dplyr package
+library(dplyr)
+
+#using pipes to extract gene name column (column 1)
+
+Gene_names<-FDR_0.05 %>% select(1)
+
+#replacing row names with numbers to standardise dataframe
+
+row.names(Gene_names)<-NULL
+
+#assigning gene names to variable
+Gene_names <- FDR_0.05[,1]
+
+##write.table function to save gene names as text file
+
+write.table(Gene_names,"Gene_names.txt",row.names=F,col.names=F,quote=F)
+  
+########################################################################
+
+#data is prepaed 
