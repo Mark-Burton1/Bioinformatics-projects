@@ -54,6 +54,7 @@ if LogC:
     ex_array = np.log2(ex_array)
 
 # Generate a box-and-whisker plot to visualize the distribution of expression data
+# Whisker plots (boxplots) provide a summary of the data distribution across samples, showing the median, quartiles, and potential outliers.
 plt.figure(figsize=(10, 6))
 sns.boxplot(data=ex_array)
 plt.title("GSE10072 Expression Data Boxplot")
@@ -68,6 +69,7 @@ plt.show()  # Display the plot
 expression_data_t = expression_data.T
 
 # Generate a density plot to visualize the distribution of expression values
+# Density plots provide a smoothed estimate of the data distribution, allowing for the visualization of the overall shape and spread of the data.
 plt.figure(figsize=(10, 6))
 sns.kdeplot(data=ex_array.flatten(), shade=True)
 plt.title("GSE10072 Expression Value Distribution")
@@ -81,6 +83,7 @@ mean_expr = np.nanmean(ex_array, axis=0)
 var_expr = np.nanvar(ex_array, axis=0)
 
 # Generate a scatter plot to visualize the mean-variance relationship
+# The mean-variance plot helps in understanding the relationship between the average expression level (mean) and the variability (variance) of each gene. This is crucial for identifying genes with high variability, which may be of biological interest.
 plt.figure(figsize=(10, 6))
 plt.scatter(mean_expr, var_expr, alpha=0.5)
 plt.xscale('log')  # Use log scale for x-axis
@@ -95,11 +98,14 @@ plt.savefig("mean_variance_trend.png")  # Save the plot as a PNG file
 ex_array = np.unique(ex_array, axis=0)
 
 # Perform UMAP (Uniform Manifold Approximation and Projection) for dimensionality reduction
+# UMAP is a technique for dimensionality reduction that preserves the global structure of the data while embedding it into a lower-dimensional space. 
+# This helps in visualizing high-dimensional data, such as gene expression profiles, in a 2D or 3D plot.
 # 'n_neighbors' specifies the number of neighboring points to consider
 reducer = umap.UMAP(n_neighbors=15, random_state=123)
 embedding = reducer.fit_transform(ex_array.T)
 
 # Generate a scatter plot of the UMAP results
+# The UMAP plot shows how samples relate to each other in a reduced dimensional space, often revealing clusters or patterns that may not be apparent in the original high-dimensional data.
 plt.figure(figsize=(10, 6))
 plt.scatter(embedding[:, 0], embedding[:, 1], s=10, c='blue', alpha=0.5)
 plt.title("UMAP Plot (n_neighbors=15)")
@@ -107,3 +113,4 @@ plt.xlabel("UMAP 1")
 plt.ylabel("UMAP 2")
 plt.tight_layout()  # Adjust layout to fit into the figure area
 plt.savefig("umap_plot.png")  # Save the plot as a PNG file
+plt.show()  # Display the plot
