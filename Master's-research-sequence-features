@@ -1,0 +1,140 @@
+# Set seed for reproducibility
+set.seed(123)
+
+# Plotting mRNA feature lengths using grouped_ggbetweenstats from ggstatplot package
+ggstatplot::grouped_ggbetweenstats(
+  data = your_data,               # Specify your data frame
+  x = your_x_variable,            # Independent variable (e.g., mRNA condition)
+  y = your_y_variable,            # Dependent variable (e.g., Number of miRNAs/gene)
+  grouping.var = your_group_var,  # Grouping variable for comparison
+  xlab = "mRNA condition",        # Label for x-axis
+  ylab = "Number of miRNAs/gene", # Label for y-axis
+
+  # Display results from pairwise comparisons
+  pairwise.comparisons = TRUE,     
+  # Display only significant pairwise comparisons
+  pairwise.display = "significant", 
+  # Adjust p-values for multiple tests using the False Discovery Rate (FDR) method
+  p.adjust.method = "fdr",         
+  # Set the theme for the plot
+  ggtheme = ggplot2::theme_gray(), 
+  # Use color palette from the ggsci package
+  package = "ggsci",               
+  palette = "default_jco",         
+  # Do not add a ggstatsplot layer to the plot
+  ggstatsplot.layer = FALSE,       
+  # Prefix for the plot title
+  title.prefix = "miRNA binding region", 
+  # Arguments relevant for ggstatplot::combine_plots
+  title.text = ""                  
+)
+
+##################################################
+
+# Plotting sequence feature lengths
+
+# Load the required library
+library(bioMaRt)
+
+# Make txdb using the Ensembl dataset for Homo sapiens
+mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
+
+# Create a TxDb object from the UCSC refGene table
+refSeq <- makeTxDbFromUCSC(genome = "hg19", tablename = "refGene")
+
+#################################################
+
+# 3'-Untranslated Region (UTR) lengths
+
+# Extract 3' UTRs by transcript
+threeUTRs <- threeUTRsByTranscript(refSeq, use.names = TRUE)
+
+# Calculate the length of 3' UTRs
+length_threeUTRs <- width(ranges(threeUTRs))
+
+# Convert the lengths to a data frame
+threeutr_lengths <- as.data.frame(length_threeUTRs)
+
+# Preview the first few rows
+head(threeutr_lengths)
+
+# Group the data by 'group' and 'group_name'
+threeutr_lengths <- threeutr_lengths %>% group_by(group, group_name)
+
+# Preview the first few rows after grouping
+head(threeutr_lengths)
+
+# Keep only unique values for 'group_name' and 'value'
+threeutr_lengths <- unique(threeutr_lengths[, c("group_name", "value")])
+
+# Rename the columns for better understanding
+colnames(threeutr_lengths) <- c("RefSeq Transcript", "3' UTR Length")
+
+###### 5' UTR lengths ######
+
+# Extract 5' UTRs by transcript
+fiveUTRs <- fiveUTRsByTranscript(refSeq, use.names = TRUE)
+
+# Calculate the length of 5' UTRs
+length_fiveUTRs <- width(ranges(fiveUTRs))
+
+# Convert the lengths to a data frame
+fiveutr_lengths <- as.data.frame(length_fiveUTRs)
+
+# Preview the first few rows
+head(fiveutr_lengths)
+
+# Group the data by 'group' and 'group_name'
+fiveutr_lengths <- fiveutr_lengths %>% group_by(group, group_name)
+
+# Preview the grouped data
+fiveutr_lengths
+
+# Keep only unique values for 'group_name' and 'value'
+fiveutr_lengths <- unique(fiveutr_lengths[, c("group_name", "value")])
+
+# Rename the columns for better understanding
+colnames(fiveutr_lengths) <- c("RefSeq Transcript", "5' UTR Length")
+
+###### Transcript lengths ######
+
+# Calculate transcript lengths without including CDS, 5' UTR, and 3' UTR lengths
+transcriptLengths <- as.data.frame(transcriptLengths(refSeq, with.cds_len = FALSE, with.utr5_len = FALSE, with.utr3_len = FALSE))
+
+# Preview the first few rows
+head(transcriptLengths)
+
+# Group the data by 'tx_name' and 'tx_len'
+transcriptLengths <- transcriptLengths %>% group_by(tx_name, tx_len)
+
+# Preview the grouped data
+transcriptLengths
+
+# Keep only unique values for 'tx_name' and 'tx_len'
+transcriptLengths <- unique(transcriptLengths[, c("tx_name", "tx_len")])
+
+# Rename the columns for better understanding
+colnames(transcriptLengths) <- c("RefSeq Transcript", "Transcript Length")
+
+##################################################
+
+# Gene ID conversion: converting gene symbols to RefSeq IDs
+
+# Load the bioMaRt library for accessing Ensembl data
+library(bioMaRt)
+
+# Use the Ensembl dataset for Homo sapiens
+mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
+
+# Example conversion: Convert gene symbols to RefSeq mRNA IDs
+gene.name <- c("SPRR2D", "SAMD11", "KLHL17")
+
+# Get RefSeq mRNA IDs for the specified gene symbols
+getBM(filters = "external_gene_name", attributes = "refseq_mrna", values = gene.name, mart = mart)
+
+
+
+
+
+
+
