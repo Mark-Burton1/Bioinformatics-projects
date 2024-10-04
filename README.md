@@ -1,4 +1,6 @@
-Hello, my name is Mark and I'm a Bioinformatics and Computational Genomics graduate from Queen's University Belfast, currently working as a data analyst coach and instructor. 
+Hello👋, my name is Mark and I'm a Bioinformatics and Computational Genomics graduate from Queen's University Belfast, and I currently work as a data analyst coach and instructor for a data apprenticeship provider.
 
-Here I showcase some projects I'm using to brush up my data analytics, data science and machine learning skills, along with legacy projects including my Master's research project titled 'Manipulating translational control in HEK293 cell lines to model genetic and functional changes in Glioblastoma Multiforme'.
+Here I showcase some projects I'm using to improve my data analytics, data science and machine learning skills, specifically for the Bioinformatics field, along with legacy projects including my Master's research investigating genetic changes in brain cancer cell lines🧬
+
+
 
