@@ -17,7 +17,7 @@ Here, I showcase projects that reflect my journey in improving my skills in **da
 
 ## 📁 Featured Projects
 
-### 1. Applying Dimensionality Reduction to GEO Series Data Using UMAP
+### 1. Applying Dimensionality Reduction to GEO Series Data in Python
 
 This project involves data processing and dimensionality reduction of publicly available GEO series data relating to gene expression signatures of cigarette smokers to explore their role in lung adenocarcinoma development and survival. Dimensionality reduction is an important strategy to sort complex gene expression data into related clusters that can indicate different disease states.
 
@@ -28,16 +28,16 @@ This project involves data processing and dimensionality reduction of publicly a
 - `matplotlib` and `seaborn`: For visualization.
 - `UMAP`: For dimensionality reduction.
 
-### 2. Preparing RNA Sequencing and Ribosome Profiling Data Using R
+### 2. Preparing RNA Sequencing and Ribosome Profiling Data in R
 
-This project showcases the basic cleaning and filtering steps to extract differentially expressed genes from RNA sequencing and differentially translated RNAs from ribosome profiling data that are statistically significant in brain cancer cell lines compared to wild-type. 
+This project showcases the basic cleaning and filtering steps to extract statistically significant measurements from ribosome profiling and RNA sequencing experiments investigating differential gene expression and translation efficiency in brain cancer cell lines compared to wild-type. 
 
 **Key Library**:
 - `dplyr`: For data manipulation and transformation.
 
 ### 3. Data Analysis and Visualization of RNA Sequencing and Ribosome Profiling Data in R
 
-This script performs a series of bioinformatics analyses focused on mRNA features, including the extraction and visualization of UTR lengths, transcript lengths, and gene ID conversions. This is key for understnading post-transcriptional regulation through miRNA mediated gene silencing, which preferentially bind to these regions based on length.
+This script performs a series of bioinformatics analyses focused on mRNA features, including the extraction and visualization of UTR lengths, transcript lengths, and gene ID conversions. This is key for understnading post-transcriptional regulation through miRNA mediated gene silencing, which preferentially bind to these regions based on length. This is important in the context of my Master's research project investigating the knockout and overexpression of zinc finger proteins, zc3h7a and zc3h7b, that are key to the post-transcriptional regulation of gene sets implicated in brain cancer (Glioblastoma Multiforme).
 
 **Key Libraries**:
 - `ggstatplot`: For creating statistical plots, particularly useful for visualizing the distribution of mRNA features and performing pairwise comparisons.
