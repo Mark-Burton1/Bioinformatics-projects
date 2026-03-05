@@ -54,7 +54,6 @@ To run this script, you need the following R packages. Install them using the ap
 4. **Length Calculation for UTRs and Transcripts**: Calculate the lengths of 3' and 5' UTRs, as well as transcript lengths, grouping and renaming the resulting data for clarity.
 5. **Gene ID Conversion**: Convert gene symbols to RefSeq mRNA IDs, allowing for easier integration of genomic data.
 
-Feel free to explore my repositories
 
 ## 🌐 Connect with Me
 
