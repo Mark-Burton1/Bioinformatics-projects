@@ -1,5 +1,3 @@
-# Hello, I'm Mark! 👋
-
 I'm a **Bioinformatics** and **Computational Genomics** graduate from [Queen's University Belfast](https://www.qub.ac.uk) 🎓. Currently, I work as a **Data Analyst Coach** and instructor for a data apprenticeship provider, where I help aspiring data professionals enhance their skills.
 
 ## 🔬 About My Work
@@ -56,12 +54,11 @@ To run this script, you need the following R packages. Install them using the ap
 4. **Length Calculation for UTRs and Transcripts**: Calculate the lengths of 3' and 5' UTRs, as well as transcript lengths, grouping and renaming the resulting data for clarity.
 5. **Gene ID Conversion**: Convert gene symbols to RefSeq mRNA IDs, allowing for easier integration of genomic data.
 
-Feel free to explore my repositories, and don't hesitate to reach out if you have any questions or collaboration ideas! 🤝
+Feel free to explore my repositories
 
 ## 🌐 Connect with Me
 
 - [LinkedIn](https://www.linkedin.com/in/mark-burton-063152208)
 
-Thank you for visiting my profile! 🚀
 
 
